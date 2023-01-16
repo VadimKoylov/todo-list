@@ -14,49 +14,50 @@ class AppModalBottomSheet {
       backgroundColor:colors.mainGrey,
       context: context,
       builder: (context) {
-        return SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.only(
-              left: 16.0,
-              top: 16.0,
-              right: 16.0,
-              bottom: MediaQuery.of(context).viewInsets.bottom + 16.0,
-            ),
-            child: Column(
-              children: [
-                AppTextField(
-                  controller: titleController,
-                  appTextFieldStyle: AppTextFieldStyle(
-                    hint: 'Title',
-                    textStyle: context.appTextStyles.inter14Reg,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                AppTextField.body(controller: bodyController),
-                const SizedBox(height: 10),
-                Container(
-                  height: 60,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: context.appColors.darkGrey,
-                    border: Border.all(
-                      color: context.appColors.mainBlack,
-                      width: 2,
+        return SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.only(
+                left: 16.0,
+                top: 16.0,
+                right: 16.0,
+              ),
+              child: Column(
+                children: [
+                  AppTextField(
+                    controller: titleController,
+                    appTextFieldStyle: AppTextFieldStyle(
+                      hint: 'Title',
+                      textStyle: context.appTextStyles.inter14Reg,
                     ),
-                    borderRadius: BorderRadius.circular(10),
                   ),
-                  child: MaterialButton(
-                    shape: RoundedRectangleBorder(
+                  const SizedBox(height: 10),
+                  AppTextField.body(controller: bodyController),
+                  const SizedBox(height: 10),
+                  Container(
+                    height: 60,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: context.appColors.darkGrey,
+                      border: Border.all(
+                        color: context.appColors.mainBlack,
+                        width: 2,
+                      ),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    onPressed: onPressed,
-                    child: Text(
-                      'Save',
-                      style: context.appTextStyles.inter14Reg,
+                    child: MaterialButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      onPressed: onPressed,
+                      child: Text(
+                        'Save',
+                        style: context.appTextStyles.inter14Reg,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         );

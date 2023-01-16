@@ -10,7 +10,7 @@ late Database appDatabase;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  appDatabase = await initDatabase();
+  // appDatabase = await initDatabase();
   runApp(const Todolist());
 }
 

@@ -1,45 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo/core/extencion/build_context_extencion.dart';
+import 'package:todo/core/utils/format_tasks.dart';
 import 'package:todo/features/app/components/components.dart';
-import 'package:todo/features/main_page/entities/task.dart';
+import 'package:todo/features/main_page/bloc/main_page_bloc.dart';
+import 'package:todo/features/main_page/widgets/loading.dart';
 
-class Body extends StatefulWidget {
-  final List<Task> tasks;
+class Body extends StatelessWidget {
+  const Body({Key? key}) : super(key: key);
 
-  const Body({
-    required this.tasks,
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  State<Body> createState() => _BodyState();
-}
-
-class _BodyState extends State<Body> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: context.appColors.mainGrey,
-      child: ListView.builder(
-        itemCount: widget.tasks.length,
-        itemBuilder: (BuildContext context, int index) {
-          return AppCheckboxListTile(
-            title: widget.tasks[index].title,
-            description: widget.tasks[index].body,
-            onChanged: (value) {
-              setState(() {});
-              widget.tasks[index] =
-                  widget.tasks[index].copyWith(isCompleted: value!.toString());
-            },
-            checkboxListTileStyle: CheckboxListTileStyle(
-              textStyle: widget.tasks[index].isCompleted == 'true'
-                  ? context.appTextStyles.inter14LineThrough
-                  : context.appTextStyles.inter14Reg,
-            ),
-            initialValue: widget.tasks[index].isCompleted == 'true',
-          );
-        },
-      ),
+    return BlocBuilder<MainPageBloc, MainPageState>(
+      builder: (context, state) {
+        final tasks = FormatTasks.getTasks(state.tasks, state.completedStatus);
+        return state.isLoading
+            ? const Loading()
+            : Container(
+                color: context.appColors.mainGrey,
+                child: ListView.builder(
+                  itemCount: tasks.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return AppCheckboxListTile(
+                      title: tasks[index].title,
+                      description: tasks[index].body,
+                      onChanged: (value) {
+                        context.read<MainPageBloc>().add(
+                              MainPageEventMarkTaskCompleted(
+                                tasks: tasks,
+                                index: index,
+                                value: value ?? false,
+                              ),
+                            );
+                      },
+                      checkboxListTileStyle: CheckboxListTileStyle(
+                        textStyle: tasks[index].isCompleted == 'true'
+                            ? context.appTextStyles.inter14LineThrough
+                            : context.appTextStyles.inter14Reg,
+                      ),
+                      initialValue: tasks[index].isCompleted == 'true',
+                    );
+                  },
+                ),
+              );
+      },
     );
   }
 }

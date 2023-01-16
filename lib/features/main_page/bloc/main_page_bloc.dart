@@ -1,93 +1,128 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
-import 'package:bloc_concurrency/bloc_concurrency.dart' as bloc_concurrency;
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:todo/features/main_page/entities/task.dart';
+import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todo/features/main_page/entities/task_model.dart';
 import 'package:todo/features/main_page/repository/main_page_repository.dart';
+import 'package:todo/features/main_page/widgets/main_page.dart';
 
-part 'main_page_bloc.freezed.dart';
+part 'main_page_event.dart';
 
-@freezed
-class MainPageEvent with _$MainPageEvent {
-  const MainPageEvent._();
+part 'main_page_state.dart';
 
-  const factory MainPageEvent.readTasks() = _ReadTasksMainPageEvent;
+class MainPageBloc extends Bloc<MainPageEvent, MainPageState> {
+  MainPageBloc() : super(const MainPageState()) {
+    on<MainPageEventReadTasks>(_onReadTasks);
+    on<MainPageEventWriteTasks>(_onWriteTasks);
+    on<MainPageEventRemoveTasks>(_onRemoveTasks);
+    on<MainPageEventChangeCompletedType>(_onChangeCompletedType);
+    on<MainPageEventMarkAllCompleted>(_onMarkAllCompleted);
+    on<MainPageEventMarkTaskCompleted>(_onMarkTaskCompleted);
+  }
 
-  const factory MainPageEvent.writeTask({
-    required Task task,
-  }) = _WriteTaskMainPageEvent;
+  final IMainPageRepository _repository = MainPageRepository();
 
-  const factory MainPageEvent.removeTasks({
-    required List<Task> tasks,
-  }) = _DeleteTasksMainPageEvent;
-}
-
-@freezed
-class MainPageState with _$MainPageState {
-  const MainPageState._();
-
-  const factory MainPageState.loading() = _LoadingMainPageState;
-
-  const factory MainPageState.loaded() = _LoadedMainPageState;
-
-  const factory MainPageState.error({
-    required final String message,
-  }) = _ErrorMainPageState;
-}
-
-class MainPageBloc extends Bloc<MainPageEvent, MainPageState>
-    implements EventSink<MainPageEvent> {
-  MainPageBloc({
-    required final IMainPageRepository repository,
-  })  : _repository = repository,
-        super(const MainPageState.loading()) {
-    on<MainPageEvent>(
-      (event, emit) => event.map<Future<void>>(
-        readTasks: (event) => _readTasks(event, emit),
-        writeTask: (event) => _writeTask(event, emit),
-        removeTasks: (event) => _removeTasks(event, emit),
+  Future<void> _onReadTasks(
+    MainPageEventReadTasks event,
+    Emitter<MainPageState> emit,
+  ) async {
+    emit(state.copyWith(isLoading: true));
+    final tasks = await _repository.readTasks();
+    emit(
+      state.copyWith(
+        tasks: tasks,
+        isLoading: false,
       ),
-      transformer: bloc_concurrency.concurrent(),
     );
   }
 
-  final IMainPageRepository _repository;
-
-  List<Task> tasks = [];
-
-  Future<void> _readTasks(
-    _ReadTasksMainPageEvent event,
+  Future<void> _onWriteTasks(
+    MainPageEventWriteTasks event,
     Emitter<MainPageState> emit,
   ) async {
-    emit(const MainPageState.loading());
-    tasks = await _repository.readTasks();
-    emit(const MainPageState.loaded());
-  }
-
-  Future<void> _writeTask(
-    _WriteTaskMainPageEvent event,
-    Emitter<MainPageState> emit,
-  ) async {
-    emit(const MainPageState.loading());
+    emit(state.copyWith(isLoading: true));
+    List<TaskModel> tasks = [];
     await _repository.writeTask(task: event.task);
-    tasks.add(event.task);
-    emit(const MainPageState.loaded());
+    tasks
+      ..addAll(event.tasks)
+      ..add(event.task);
+    emit(
+      state.copyWith(
+        tasks: tasks,
+        isLoading: false,
+      ),
+    );
   }
 
-  Future<void> _removeTasks(
-    _DeleteTasksMainPageEvent event,
+  Future<void> _onRemoveTasks(
+    MainPageEventRemoveTasks event,
     Emitter<MainPageState> emit,
   ) async {
-    emit(const MainPageState.loading());
+    emit(state.copyWith(isLoading: true));
+    List<TaskModel> tasks = [];
+    tasks.addAll(event.tasks);
     final newList =
-        event.tasks.where((element) => element.isCompleted == 'true').toList();
+        tasks.where((element) => element.isCompleted == 'true').toList();
     await _repository.removeTasks(tasks: newList);
-    for (int i = 0; i < event.tasks.length; i++) {
-      if (event.tasks[i].isCompleted == 'true') {
+    for (int i = 0; i < tasks.length; i++) {
+      if (tasks[i].isCompleted == 'true') {
         tasks.removeAt(i);
+        i--;
       }
     }
-    emit(const MainPageState.loaded());
+    emit(
+      state.copyWith(
+        tasks: tasks,
+        isLoading: false,
+      ),
+    );
+  }
+
+  Future<void> _onChangeCompletedType(
+    MainPageEventChangeCompletedType event,
+    Emitter<MainPageState> emit,
+  ) async {
+    emit(
+      state.copyWith(
+        tasks: event.tasks,
+        completedStatus: event.completedStatus,
+      ),
+    );
+  }
+
+  Future<void> _onMarkAllCompleted(
+    MainPageEventMarkAllCompleted event,
+    Emitter<MainPageState> emit,
+  ) async {
+    emit(state.copyWith(isLoading: true));
+    List<TaskModel> tasks = [];
+    tasks.addAll(event.tasks);
+    for (int i = 0; i < tasks.length; i++) {
+      tasks[i] = tasks[i].copyWith(isCompleted: 'true');
+    }
+    emit(
+      state.copyWith(
+        tasks: tasks,
+        isLoading: false,
+      ),
+    );
+  }
+
+  Future<void> _onMarkTaskCompleted(
+    MainPageEventMarkTaskCompleted event,
+    Emitter<MainPageState> emit,
+  ) async {
+    emit(state.copyWith(isLoading: true));
+    List<TaskModel> tasks = [];
+    tasks.addAll(event.tasks);
+    tasks[event.index] = tasks[event.index].copyWith(
+      isCompleted: event.value.toString(),
+    );
+    emit(
+      state.copyWith(
+        tasks: tasks,
+        isLoading: false,
+      ),
+    );
   }
 }

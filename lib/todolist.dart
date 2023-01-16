@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo/features/app/theme/app_theme.dart';
+import 'package:todo/features/main_page/bloc/main_page_bloc.dart';
 import 'package:todo/features/main_page/widgets/main_page.dart';
 
 class Todolist extends StatelessWidget {
@@ -11,7 +13,10 @@ class Todolist extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: AppTheme.themeData,
-      home: const MainPage(),
+      home: BlocProvider(
+        create: (context) => MainPageBloc(),
+        child: MainPage(),
+      ),
     );
   }
 }
