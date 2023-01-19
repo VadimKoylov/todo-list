@@ -4,6 +4,7 @@ import 'package:todo/core/extencion/build_context_extencion.dart';
 import 'package:todo/core/utils/format_tasks.dart';
 import 'package:todo/features/app/components/components.dart';
 import 'package:todo/features/main_page/bloc/main_page_bloc.dart';
+import 'package:todo/features/main_page/entities/task_model.dart';
 import 'package:todo/features/main_page/widgets/loading.dart';
 
 class Body extends StatelessWidget {
@@ -13,8 +14,14 @@ class Body extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<MainPageBloc, MainPageState>(
       builder: (context, state) {
-        final tasks = FormatTasks.getTasks(state.tasks, state.completedStatus);
-        return state.isLoading
+        List<TaskModel> tasks = [];
+        if (state.tasksBox != null) {
+          tasks = FormatTasks.getTasks(
+            state.tasksBox!,
+            state.completedStatus,
+          );
+        }
+        return state.isLoading || state.tasksBox == null
             ? const Loading()
             : Container(
                 color: context.appColors.mainGrey,
@@ -27,7 +34,7 @@ class Body extends StatelessWidget {
                       onChanged: (value) {
                         context.read<MainPageBloc>().add(
                               MainPageEventMarkTaskCompleted(
-                                tasks: tasks,
+                                tasksBox: state.tasksBox!,
                                 index: index,
                                 value: value ?? false,
                               ),

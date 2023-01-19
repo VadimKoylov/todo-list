@@ -3,22 +3,22 @@ part of 'main_page_bloc.dart';
 class MainPageState extends Equatable {
   const MainPageState({
     this.isLoading = true,
-    this.tasks = const [],
+    this.tasksBox,
     this.completedStatus = Completed.all,
   });
 
   final bool isLoading;
-  final List<TaskModel> tasks;
+  final Box<TaskModel>? tasksBox;
   final Completed completedStatus;
 
   MainPageState copyWith({
     bool? isLoading,
-    List<TaskModel>? tasks,
+    Box<TaskModel>? tasksBox,
     Completed? completedStatus,
   }) {
     return MainPageState(
       isLoading: isLoading ?? this.isLoading,
-      tasks: tasks ?? this.tasks,
+      tasksBox: tasksBox ?? this.tasksBox,
       completedStatus: completedStatus ?? this.completedStatus,
     );
   }
@@ -26,7 +26,7 @@ class MainPageState extends Equatable {
   @override
   List<Object?> get props => [
         isLoading,
-        tasks,
+        tasksBox,
         completedStatus,
       ];
 }

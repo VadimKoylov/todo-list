@@ -1,17 +1,22 @@
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:todo/features/main_page/entities/task_model.dart';
 import 'package:todo/features/main_page/widgets/main_page.dart';
 
 class FormatTasks {
-  static List<TaskModel> getTasks(List<TaskModel> tasks, Completed status) {
+  static List<TaskModel> getTasks(Box<TaskModel> tasksBox, Completed status) {
     switch (status) {
       case Completed.all:
-        return tasks;
+        return tasksBox.values.toList();
       case Completed.activity:
-        return tasks
+        return tasksBox.values
+            .toList()
             .where((element) => element.isCompleted == 'false')
             .toList();
       case Completed.completed:
-        return tasks.where((element) => element.isCompleted == 'true').toList();
+        return tasksBox.values
+            .toList()
+            .where((element) => element.isCompleted == 'true')
+            .toList();
     }
   }
 }

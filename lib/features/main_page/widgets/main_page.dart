@@ -33,28 +33,34 @@ class MainPage extends StatelessWidget {
             onSelected: (value) {
               switch (value) {
                 case 'Show all':
-                  bloc.add(
-                    MainPageEventChangeCompletedType(
-                      completedStatus: Completed.all,
-                      tasks: bloc.state.tasks,
-                    ),
-                  );
+                  if (bloc.state.tasksBox != null) {
+                    bloc.add(
+                      MainPageEventChangeCompletedType(
+                        completedStatus: Completed.all,
+                        tasksBox: bloc.state.tasksBox!,
+                      ),
+                    );
+                  }
                   break;
                 case 'Show activity':
-                  bloc.add(
-                    MainPageEventChangeCompletedType(
-                      completedStatus: Completed.activity,
-                      tasks: bloc.state.tasks,
-                    ),
-                  );
+                  if (bloc.state.tasksBox != null) {
+                    bloc.add(
+                      MainPageEventChangeCompletedType(
+                        completedStatus: Completed.activity,
+                        tasksBox: bloc.state.tasksBox!,
+                      ),
+                    );
+                  }
                   break;
                 case 'Show completed':
-                  bloc.add(
-                    MainPageEventChangeCompletedType(
-                      completedStatus: Completed.completed,
-                      tasks: bloc.state.tasks,
-                    ),
-                  );
+                  if (bloc.state.tasksBox != null) {
+                    bloc.add(
+                      MainPageEventChangeCompletedType(
+                        completedStatus: Completed.completed,
+                        tasksBox: bloc.state.tasksBox!,
+                      ),
+                    );
+                  }
                   break;
               }
             },
@@ -68,14 +74,22 @@ class MainPage extends StatelessWidget {
             onSelected: (value) {
               switch (value) {
                 case 'Mark all completed':
-                  bloc.add(
-                    MainPageEventMarkAllCompleted(
-                      tasks: bloc.state.tasks,
-                    ),
-                  );
+                  if (bloc.state.tasksBox != null) {
+                    bloc.add(
+                      MainPageEventMarkAllCompleted(
+                        tasksBox: bloc.state.tasksBox!,
+                      ),
+                    );
+                  }
                   break;
                 case 'Clear completed':
-                  bloc.add(MainPageEventRemoveTasks(tasks: bloc.state.tasks));
+                  if (bloc.state.tasksBox != null) {
+                    bloc.add(
+                      MainPageEventRemoveTasks(
+                        tasksBox: bloc.state.tasksBox!,
+                      ),
+                    );
+                  }
                   AppSnackBar.showSnackBar(
                     context,
                     message: 'Tasks removed',
@@ -95,7 +109,8 @@ class MainPage extends StatelessWidget {
             titleController: titleController,
             bodyController: bodyController,
             onPressed: () {
-              if (titleController.text.isNotEmpty) {
+              if (titleController.text.isNotEmpty &&
+                  bloc.state.tasksBox != null) {
                 bloc.add(
                   MainPageEventWriteTasks(
                     task: TaskModel(
@@ -104,7 +119,7 @@ class MainPage extends StatelessWidget {
                       body: bodyController.text,
                       isCompleted: 'false',
                     ),
-                    tasks: bloc.state.tasks,
+                    tasksBox: bloc.state.tasksBox!,
                   ),
                 );
               }

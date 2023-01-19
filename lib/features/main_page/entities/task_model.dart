@@ -1,18 +1,22 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-
-part 'task_model.freezed.dart';
+import 'package:hive/hive.dart';
 
 part 'task_model.g.dart';
 
-@freezed
-class TaskModel with _$TaskModel {
-  const factory TaskModel({
-    required String id,
-    required String title,
-    required String body,
-    required String isCompleted,
-  }) = _TaskModel;
+@HiveType(typeId: 0)
+class TaskModel {
+  @HiveField(0)
+  String id;
+  @HiveField(1)
+  String title;
+  @HiveField(2)
+  String body;
+  @HiveField(3)
+  String isCompleted;
 
-  factory TaskModel.fromJson(Map<String, Object?> json) =>
-      _$TaskModelFromJson(json);
+  TaskModel({
+    required this.id,
+    required this.title,
+    required this.body,
+    required this.isCompleted,
+  });
 }

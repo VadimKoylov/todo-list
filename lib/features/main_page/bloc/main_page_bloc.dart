@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:todo/features/main_page/entities/task_model.dart';
 import 'package:todo/features/main_page/repository/main_page_repository.dart';
 import 'package:todo/features/main_page/widgets/main_page.dart';
@@ -27,10 +28,10 @@ class MainPageBloc extends Bloc<MainPageEvent, MainPageState> {
     Emitter<MainPageState> emit,
   ) async {
     emit(state.copyWith(isLoading: true));
-    final tasks = await _repository.readTasks();
+    final tasksBox = _repository.readBox();
     emit(
       state.copyWith(
-        tasks: tasks,
+        tasksBox: tasksBox,
         isLoading: false,
       ),
     );
@@ -41,14 +42,11 @@ class MainPageBloc extends Bloc<MainPageEvent, MainPageState> {
     Emitter<MainPageState> emit,
   ) async {
     emit(state.copyWith(isLoading: true));
-    List<TaskModel> tasks = [];
     await _repository.writeTask(task: event.task);
-    tasks
-      ..addAll(event.tasks)
-      ..add(event.task);
+    event.tasksBox.add(event.task);
     emit(
       state.copyWith(
-        tasks: tasks,
+        tasksBox: event.tasksBox,
         isLoading: false,
       ),
     );
@@ -59,20 +57,10 @@ class MainPageBloc extends Bloc<MainPageEvent, MainPageState> {
     Emitter<MainPageState> emit,
   ) async {
     emit(state.copyWith(isLoading: true));
-    List<TaskModel> tasks = [];
-    tasks.addAll(event.tasks);
-    final newList =
-        tasks.where((element) => element.isCompleted == 'true').toList();
-    await _repository.removeTasks(tasks: newList);
-    for (int i = 0; i < tasks.length; i++) {
-      if (tasks[i].isCompleted == 'true') {
-        tasks.removeAt(i);
-        i--;
-      }
-    }
+    final newTasksBox = await _repository.removeTasks(tasksBox: event.tasksBox);
     emit(
       state.copyWith(
-        tasks: tasks,
+        tasksBox: newTasksBox,
         isLoading: false,
       ),
     );
@@ -84,7 +72,7 @@ class MainPageBloc extends Bloc<MainPageEvent, MainPageState> {
   ) async {
     emit(
       state.copyWith(
-        tasks: event.tasks,
+        tasksBox: event.tasksBox,
         completedStatus: event.completedStatus,
       ),
     );
@@ -95,14 +83,12 @@ class MainPageBloc extends Bloc<MainPageEvent, MainPageState> {
     Emitter<MainPageState> emit,
   ) async {
     emit(state.copyWith(isLoading: true));
-    List<TaskModel> tasks = [];
-    tasks.addAll(event.tasks);
-    for (int i = 0; i < tasks.length; i++) {
-      tasks[i] = tasks[i].copyWith(isCompleted: 'true');
+    for (int i = 0; i < event.tasksBox.length; i++) {
+      event.tasksBox.values.toList()[i].isCompleted = 'true';
     }
     emit(
       state.copyWith(
-        tasks: tasks,
+        tasksBox: event.tasksBox,
         isLoading: false,
       ),
     );
@@ -113,14 +99,11 @@ class MainPageBloc extends Bloc<MainPageEvent, MainPageState> {
     Emitter<MainPageState> emit,
   ) async {
     emit(state.copyWith(isLoading: true));
-    List<TaskModel> tasks = [];
-    tasks.addAll(event.tasks);
-    tasks[event.index] = tasks[event.index].copyWith(
-      isCompleted: event.value.toString(),
-    );
+    event.tasksBox.values.toList()[event.index].isCompleted =
+        event.value.toString();
     emit(
       state.copyWith(
-        tasks: tasks,
+        tasksBox: event.tasksBox,
         isLoading: false,
       ),
     );

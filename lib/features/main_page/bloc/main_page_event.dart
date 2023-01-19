@@ -9,47 +9,47 @@ class MainPageEventReadTasks extends MainPageEvent {}
 class MainPageEventWriteTasks extends MainPageEvent {
   const MainPageEventWriteTasks({
     required this.task,
-    required this.tasks,
+    required this.tasksBox,
   });
 
   final TaskModel task;
-  final List<TaskModel> tasks;
+  final Box<TaskModel> tasksBox;
 }
 
 class MainPageEventRemoveTasks extends MainPageEvent {
   const MainPageEventRemoveTasks({
-    required this.tasks,
+    required this.tasksBox,
   });
 
-  final List<TaskModel> tasks;
+  final Box<TaskModel> tasksBox;
 }
 
 class MainPageEventChangeCompletedType extends MainPageEvent {
   const MainPageEventChangeCompletedType({
     required this.completedStatus,
-    required this.tasks,
+    required this.tasksBox,
   });
 
   final Completed completedStatus;
-  final List<TaskModel> tasks;
+  final Box<TaskModel> tasksBox;
 }
 
 class MainPageEventMarkAllCompleted extends MainPageEvent {
   const MainPageEventMarkAllCompleted({
-    required this.tasks,
+    required this.tasksBox,
   });
 
-  final List<TaskModel> tasks;
+  final Box<TaskModel> tasksBox;
 }
 
 class MainPageEventMarkTaskCompleted extends MainPageEvent {
   const MainPageEventMarkTaskCompleted({
-    required this.tasks,
+    required this.tasksBox,
     required this.index,
     required this.value,
   });
 
-  final List<TaskModel> tasks;
+  final Box<TaskModel> tasksBox;
   final int index;
   final bool value;
 }

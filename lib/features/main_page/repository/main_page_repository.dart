@@ -1,24 +1,24 @@
 import 'dart:developer';
 
-import 'package:todo/core/database/app_database.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:todo/features/main_page/entities/task_model.dart';
 
 abstract class IMainPageRepository {
-  Future<List<TaskModel>> readTasks();
+  Box<TaskModel> readBox();
 
   Future<void> writeTask({required final TaskModel task});
 
-  Future<void> removeTasks({required final List<TaskModel> tasks});
+  Future<Box<TaskModel>> removeTasks({required final Box<TaskModel> tasksBox});
 }
 
 class MainPageRepository implements IMainPageRepository {
-  late final AppDatabase _database;
+  // late final AppDatabase _database;
 
   @override
-  Future<List<TaskModel>> readTasks() async {
+  Box<TaskModel> readBox() {
     try {
-      final tasks = await _database.readDatabase();
-      return List<TaskModel>.from((tasks).map((x) => TaskModel.fromJson(x)));
+      final tasksBox = Hive.box<TaskModel>("TODO");
+      return tasksBox;
     } catch (e, trace) {
       log('ERROR: $e');
       log('ERROR: $trace');
@@ -29,7 +29,7 @@ class MainPageRepository implements IMainPageRepository {
   @override
   Future<void> writeTask({required TaskModel task}) async {
     try {
-      await _database.writeTask(task);
+      // await _database.writeTask(task);
     } catch (e, trace) {
       log('ERROR: $e');
       log('ERROR: $trace');
@@ -38,11 +38,15 @@ class MainPageRepository implements IMainPageRepository {
   }
 
   @override
-  Future<void> removeTasks({required List<TaskModel> tasks}) async {
+  Future<Box<TaskModel>> removeTasks({required Box<TaskModel> tasksBox}) async {
     try {
-      for (var element in tasks) {
-        await _database.deleteTask(element);
+      for (int i = 0; i < tasksBox.values.toList().length; i++) {
+        if (tasksBox.values.toList()[i].isCompleted == 'true') {
+          tasksBox.deleteAt(i);
+          i--;
+        }
       }
+      return tasksBox;
     } catch (e, trace) {
       log('ERROR: $e');
       log('ERROR: $trace');
