@@ -42,7 +42,9 @@ class Body extends StatelessWidget {
                       },
                       checkboxListTileStyle: CheckboxListTileStyle(
                         textStyle: tasks[index].isCompleted == 'true'
-                            ? context.appTextStyles.inter14LineThrough
+                            ? context.appTextStyles.inter14LineThrough.copyWith(
+                                decorationThickness: 2,
+                              )
                             : context.appTextStyles.inter14Reg,
                       ),
                       initialValue: tasks[index].isCompleted == 'true',

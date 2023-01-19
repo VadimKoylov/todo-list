@@ -4,24 +4,27 @@ import 'package:todo/core/extencion/build_context_extencion.dart';
 import 'package:todo/features/app/components/components.dart';
 
 class AppModalBottomSheet {
-  static void modalBottomSheet(BuildContext context, {
+  static void modalBottomSheet(
+    BuildContext context, {
     required TextEditingController titleController,
     required TextEditingController bodyController,
     required void Function()? onPressed,
-}) {
+  }) {
     showModalBottomSheet(
       isScrollControlled: true,
-      backgroundColor:colors.mainGrey,
+      backgroundColor: colors.mainGrey,
       context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(12),
+          topRight: Radius.circular(12),
+        ),
+      ),
       builder: (context) {
         return SafeArea(
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.only(
-                left: 16.0,
-                top: 16.0,
-                right: 16.0,
-              ),
+              padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
                   AppTextField(

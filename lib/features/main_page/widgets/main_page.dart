@@ -7,7 +7,6 @@ import 'package:todo/features/main_page/bloc/main_page_bloc.dart';
 import 'package:todo/features/main_page/entities/task_model.dart';
 import 'package:todo/features/main_page/widgets/app_popup_menu_button.dart';
 import 'package:todo/features/main_page/widgets/body.dart';
-import 'package:uuid/uuid.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -102,6 +101,14 @@ class MainPage extends StatelessWidget {
       ),
       body: Body(),
       floatingActionButton: FloatingActionButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(100),
+          side: BorderSide(
+            color: context.appColors.mainBlack,
+            width: 2,
+          ),
+        ),
+        backgroundColor: context.appColors.white24,
         child: const Icon(Icons.add),
         onPressed: () {
           AppModalBottomSheet.modalBottomSheet(
@@ -114,7 +121,6 @@ class MainPage extends StatelessWidget {
                 bloc.add(
                   MainPageEventWriteTasks(
                     task: TaskModel(
-                      id: const Uuid().v4(),
                       title: titleController.text,
                       body: bodyController.text,
                       isCompleted: 'false',

@@ -25,7 +25,7 @@ class AppTextField extends StatefulWidget {
         textStyle: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w400,
-          color:colors.mainWhite,
+          color: colors.mainWhite,
         )),
   }) : super(key: key);
 
@@ -52,15 +52,14 @@ class _AppTextFieldState extends State<AppTextField> {
         keyboardType: textFieldStyle.keyboardType,
         style: textFieldStyle.textStyle,
         expands: textFieldStyle.isExpand,
-        inputFormatters: <TextInputFormatter>[
-          UpperCaseTextFormatter()
-        ],
+        cursorColor: context.appColors.mainWhite,
+        inputFormatters: <TextInputFormatter>[UpperCaseTextFormatter()],
         textAlignVertical: TextAlignVertical.top,
         decoration: InputDecoration(
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
             borderSide: BorderSide(
-              color: context.appColors.mainBlue,
+              color: context.appColors.mainWhite,
             ),
           ),
           enabledBorder: OutlineInputBorder(
@@ -116,14 +115,16 @@ class AppTextFieldStyle {
 
 class UpperCaseTextFormatter extends TextInputFormatter {
   @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
     return TextEditingValue(
       text: capitalize(newValue.text),
       selection: newValue.selection,
     );
   }
 }
+
 String capitalize(String value) {
-  if(value.trim().isEmpty) return "";
+  if (value.trim().isEmpty) return "";
   return "${value[0].toUpperCase()}${value.substring(1).toLowerCase()}";
 }
