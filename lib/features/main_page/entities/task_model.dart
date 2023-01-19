@@ -7,7 +7,7 @@ class TaskModel {
   @HiveField(0)
   String title;
   @HiveField(1)
-  String body;
+  String? body;
   @HiveField(2)
   String isCompleted;
 

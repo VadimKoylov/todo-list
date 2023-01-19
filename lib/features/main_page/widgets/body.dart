@@ -30,7 +30,7 @@ class Body extends StatelessWidget {
                   itemBuilder: (BuildContext context, int index) {
                     return AppCheckboxListTile(
                       title: tasks[index].title,
-                      description: tasks[index].body,
+                      description: tasks[index].body ?? '',
                       onChanged: (value) {
                         context.read<MainPageBloc>().add(
                               MainPageEventMarkTaskCompleted(

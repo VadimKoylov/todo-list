@@ -18,11 +18,17 @@ class AppSnackBar {
         style: const TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w400,
-          color:colors.mainWhite,
+          color: colors.mainWhite,
         ),
       ),
-      backgroundColor:colors.mainBlack,
+      backgroundColor: colors.mainBlack,
       behavior: SnackBarBehavior.fixed,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(6.0),
+          topRight: Radius.circular(6.0),
+        ),
+      ),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
