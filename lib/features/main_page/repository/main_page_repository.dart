@@ -6,30 +6,20 @@ import 'package:todo/features/main_page/entities/task_model.dart';
 abstract class IMainPageRepository {
   Box<TaskModel> readBox();
 
-  Future<void> writeTask({required final TaskModel task});
-
   Future<Box<TaskModel>> removeTasks({required final Box<TaskModel> tasksBox});
+
+  Future<Box<TaskModel>> removeTask({
+    required final Box<TaskModel> tasksBox,
+    required final int taskIndex,
+  });
 }
 
 class MainPageRepository implements IMainPageRepository {
-  // late final AppDatabase _database;
-
   @override
   Box<TaskModel> readBox() {
     try {
       final tasksBox = Hive.box<TaskModel>("TODO");
       return tasksBox;
-    } catch (e, trace) {
-      log('ERROR: $e');
-      log('ERROR: $trace');
-      rethrow;
-    }
-  }
-
-  @override
-  Future<void> writeTask({required TaskModel task}) async {
-    try {
-      // await _database.writeTask(task);
     } catch (e, trace) {
       log('ERROR: $e');
       log('ERROR: $trace');
@@ -46,6 +36,21 @@ class MainPageRepository implements IMainPageRepository {
           i--;
         }
       }
+      return tasksBox;
+    } catch (e, trace) {
+      log('ERROR: $e');
+      log('ERROR: $trace');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Box<TaskModel>> removeTask({
+    required Box<TaskModel> tasksBox,
+    required int taskIndex,
+  }) async {
+    try {
+      tasksBox.deleteAt(taskIndex);
       return tasksBox;
     } catch (e, trace) {
       log('ERROR: $e');

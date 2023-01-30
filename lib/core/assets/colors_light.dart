@@ -11,3 +11,5 @@ const Color mainPurple = Color(0xFF776EC9);
 const Color mainBlue = Color(0xFF1E9CEA);
 
 const Color mainBlack = Color(0xFF000000);
+
+const Color mainRed = Color(0xFFFF0000);

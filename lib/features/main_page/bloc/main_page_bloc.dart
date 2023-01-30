@@ -16,6 +16,7 @@ class MainPageBloc extends Bloc<MainPageEvent, MainPageState> {
     on<MainPageEventReadTasks>(_onReadTasks);
     on<MainPageEventWriteTasks>(_onWriteTasks);
     on<MainPageEventRemoveTasks>(_onRemoveTasks);
+    on<MainPageEventRemoveTask>(_onRemoveTask);
     on<MainPageEventChangeCompletedType>(_onChangeCompletedType);
     on<MainPageEventMarkAllCompleted>(_onMarkAllCompleted);
     on<MainPageEventMarkTaskCompleted>(_onMarkTaskCompleted);
@@ -42,7 +43,6 @@ class MainPageBloc extends Bloc<MainPageEvent, MainPageState> {
     Emitter<MainPageState> emit,
   ) async {
     emit(state.copyWith(isLoading: true));
-    await _repository.writeTask(task: event.task);
     event.tasksBox.add(event.task);
     emit(
       state.copyWith(
@@ -58,6 +58,23 @@ class MainPageBloc extends Bloc<MainPageEvent, MainPageState> {
   ) async {
     emit(state.copyWith(isLoading: true));
     final newTasksBox = await _repository.removeTasks(tasksBox: event.tasksBox);
+    emit(
+      state.copyWith(
+        tasksBox: newTasksBox,
+        isLoading: false,
+      ),
+    );
+  }
+
+  Future<void> _onRemoveTask(
+    MainPageEventRemoveTask event,
+    Emitter<MainPageState> emit,
+  ) async {
+    emit(state.copyWith(isLoading: true));
+    final newTasksBox = await _repository.removeTask(
+      tasksBox: event.tasksBox,
+      taskIndex: event.taskIndex,
+    );
     emit(
       state.copyWith(
         tasksBox: newTasksBox,

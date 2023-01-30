@@ -24,6 +24,16 @@ class MainPageEventRemoveTasks extends MainPageEvent {
   final Box<TaskModel> tasksBox;
 }
 
+class MainPageEventRemoveTask extends MainPageEvent {
+  const MainPageEventRemoveTask({
+    required this.taskIndex,
+    required this.tasksBox,
+  });
+
+  final int taskIndex;
+  final Box<TaskModel> tasksBox;
+}
+
 class MainPageEventChangeCompletedType extends MainPageEvent {
   const MainPageEventChangeCompletedType({
     required this.completedStatus,

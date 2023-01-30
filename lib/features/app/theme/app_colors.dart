@@ -7,6 +7,7 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color mainPurple;
   final Color mainBlue;
   final Color mainBlack;
+  final Color mainRed;
   final Color darkGrey;
 
   const AppColors({
@@ -16,6 +17,7 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.mainPurple,
     required this.mainBlue,
     required this.mainBlack,
+    required this.mainRed,
     required this.darkGrey,
   });
 
@@ -27,6 +29,7 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? mainPurple,
     Color? mainBlue,
     Color? mainBlack,
+    Color? mainRed,
     Color? darkGrey,
   }) =>
       AppColors(
@@ -36,6 +39,7 @@ class AppColors extends ThemeExtension<AppColors> {
         mainPurple: mainPurple ?? this.mainPurple,
         mainBlue: mainBlue ?? this.mainBlue,
         mainBlack: mainBlack ?? this.mainBlack,
+        mainRed: mainRed ?? this.mainRed,
         darkGrey: darkGrey ?? this.darkGrey,
       );
 
@@ -51,6 +55,7 @@ class AppColors extends ThemeExtension<AppColors> {
       mainPurple: Color.lerp(mainPurple, other.mainPurple, t)!,
       mainBlue: Color.lerp(mainBlue, other.mainBlue, t)!,
       mainBlack: Color.lerp(mainBlack, other.mainBlack, t)!,
+      mainRed: Color.lerp(mainRed, other.mainRed, t)!,
       darkGrey: Color.lerp(darkGrey, other.darkGrey, t)!,
     );
   }

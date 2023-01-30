@@ -13,6 +13,7 @@ abstract class AppTheme {
         darkGrey:colors.darkGrey,
         mainBlack:colors.mainBlack,
         mainBlue:colors.mainBlue,
+        mainRed:colors.mainRed,
         mainPurple:colors.mainPurple,
       ),
       const AppTextStyles(
