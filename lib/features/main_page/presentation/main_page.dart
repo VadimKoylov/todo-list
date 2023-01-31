@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todo/core/enums/completed_status.dart';
 import 'package:todo/core/extencion/build_context_extencion.dart';
-import 'package:todo/features/app/components/components.dart';
-import 'package:todo/features/app/components/widgets/modal_bootom_sheet.dart';
-import 'package:todo/features/main_page/bloc/main_page_bloc.dart';
-import 'package:todo/features/main_page/entities/task_model.dart';
-import 'package:todo/features/main_page/widgets/app_popup_menu_button.dart';
-import 'package:todo/features/main_page/widgets/body.dart';
+import 'package:todo/core/presentation/widgets.dart';
+import 'package:todo/features/main_page/domain/entity/entities.dart';
+import 'package:todo/features/main_page/presentation/bloc/main_page_bloc.dart';
+import 'package:todo/features/main_page/presentation/widgets/widgets.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final titleController = TextEditingController();
-    final bodyController = TextEditingController();
     final bloc = context.read<MainPageBloc>();
     bloc.add(MainPageEventReadTasks());
     return Scaffold(
@@ -23,7 +20,7 @@ class MainPage extends StatelessWidget {
         backgroundColor: context.appColors.mainGrey,
         actions: [
           AppPopupMenuButton(
-            icon: const Icon(Icons.sort_rounded),
+            icon: Icon(Icons.sort_rounded, color: context.appColors.mainWhite),
             items: const {
               'Show all',
               'Show activity',
@@ -35,7 +32,7 @@ class MainPage extends StatelessWidget {
                   if (bloc.state.tasksBox != null) {
                     bloc.add(
                       MainPageEventChangeCompletedType(
-                        completedStatus: Completed.all,
+                        completedStatus: CompletedStatus.all,
                         tasksBox: bloc.state.tasksBox!,
                       ),
                     );
@@ -45,7 +42,7 @@ class MainPage extends StatelessWidget {
                   if (bloc.state.tasksBox != null) {
                     bloc.add(
                       MainPageEventChangeCompletedType(
-                        completedStatus: Completed.activity,
+                        completedStatus: CompletedStatus.activity,
                         tasksBox: bloc.state.tasksBox!,
                       ),
                     );
@@ -55,7 +52,7 @@ class MainPage extends StatelessWidget {
                   if (bloc.state.tasksBox != null) {
                     bloc.add(
                       MainPageEventChangeCompletedType(
-                        completedStatus: Completed.completed,
+                        completedStatus: CompletedStatus.completed,
                         tasksBox: bloc.state.tasksBox!,
                       ),
                     );
@@ -65,7 +62,10 @@ class MainPage extends StatelessWidget {
             },
           ),
           AppPopupMenuButton(
-            icon: const Icon(Icons.more_horiz_outlined),
+            icon: Icon(
+              Icons.more_horiz_outlined,
+              color: context.appColors.mainWhite,
+            ),
             items: const {
               'Mark all completed',
               'Clear completed',
@@ -111,33 +111,36 @@ class MainPage extends StatelessWidget {
         backgroundColor: context.appColors.white24,
         child: const Icon(Icons.add),
         onPressed: () {
-          AppModalBottomSheet.modalBottomSheet(
-            context,
-            titleController: titleController,
-            bodyController: bodyController,
-            onPressed: () {
-              if (titleController.text.isNotEmpty &&
-                  bloc.state.tasksBox != null) {
-                bloc.add(
-                  MainPageEventWriteTasks(
-                    task: TaskModel(
-                      title: titleController.text,
-                      body: bodyController.text,
-                      isCompleted: 'false',
-                    ),
-                    tasksBox: bloc.state.tasksBox!,
-                  ),
-                );
-              }
-              titleController.clear();
-              bodyController.clear();
-              Navigator.pop(context);
-            },
-          );
+          onFloatingActionButtonPressed(context, bloc);
         },
       ),
     );
   }
-}
 
-enum Completed { all, activity, completed }
+  void onFloatingActionButtonPressed(BuildContext context, MainPageBloc bloc) {
+    final titleController = TextEditingController();
+    final bodyController = TextEditingController();
+    AppModalBottomSheet.modalBottomSheet(
+      context,
+      titleController: titleController,
+      bodyController: bodyController,
+      onPressed: () {
+        if (titleController.text.isNotEmpty && bloc.state.tasksBox != null) {
+          bloc.add(
+            MainPageEventWriteTasks(
+              task: TaskModel(
+                title: titleController.text,
+                body: bodyController.text,
+                isCompleted: 'false',
+              ),
+              tasksBox: bloc.state.tasksBox!,
+            ),
+          );
+        }
+        titleController.clear();
+        bodyController.clear();
+        Navigator.pop(context);
+      },
+    );
+  }
+}

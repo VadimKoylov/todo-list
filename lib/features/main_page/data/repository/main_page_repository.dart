@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:todo/features/main_page/entities/task_model.dart';
+import 'package:todo/features/main_page/domain/entity/entities.dart';
 
 abstract class IMainPageRepository {
   Box<TaskModel> readBox();

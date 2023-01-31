@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todo/features/app/components/widgets/app_checkbox_list_tile.dart';
+import 'package:todo/core/presentation/widgets.dart';
 
 class CheckboxListTileStyles extends ThemeExtension<CheckboxListTileStyles> {
   final CheckboxListTileStyle checkboxListTileStyle;

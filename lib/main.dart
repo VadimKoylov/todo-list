@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:todo/features/main_page/entities/task_model.dart';
+import 'package:todo/features/main_page/domain/entity/entities.dart';
 import 'package:todo/todolist.dart';
 
 void main() async {

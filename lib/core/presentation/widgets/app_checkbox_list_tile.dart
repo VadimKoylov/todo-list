@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo/core/extencion/build_context_extencion.dart';
-import 'package:todo/features/app/theme/app_checkbox_list_tile_styles.dart';
 import 'package:todo/core/assets/colors_light.dart' as colors;
+import 'package:todo/core/theme/app_checkbox_list_tile_styles.dart';
 
 class AppCheckboxListTile extends StatelessWidget {
   final void Function(bool?) onChanged;
@@ -26,7 +26,7 @@ class AppCheckboxListTile extends StatelessWidget {
             .extension<CheckboxListTileStyles>()!
             .checkboxListTileStyle;
     return SizedBox(
-      height: 50,
+      height: 70,
       child: CheckboxListTile(
         activeColor: context.appColors.mainPurple,
         checkboxShape: const RoundedRectangleBorder(

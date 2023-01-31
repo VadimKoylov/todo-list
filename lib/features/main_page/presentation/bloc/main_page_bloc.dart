@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:todo/features/main_page/entities/task_model.dart';
-import 'package:todo/features/main_page/repository/main_page_repository.dart';
-import 'package:todo/features/main_page/widgets/main_page.dart';
+import 'package:todo/core/enums/completed_status.dart';
+import 'package:todo/features/main_page/data/repository/main_page_repository.dart';
+import 'package:todo/features/main_page/domain/entity/entities.dart';
 
 part 'main_page_event.dart';
 

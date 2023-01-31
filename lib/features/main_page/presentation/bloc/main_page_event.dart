@@ -40,7 +40,7 @@ class MainPageEventChangeCompletedType extends MainPageEvent {
     required this.tasksBox,
   });
 
-  final Completed completedStatus;
+  final CompletedStatus completedStatus;
   final Box<TaskModel> tasksBox;
 }
 

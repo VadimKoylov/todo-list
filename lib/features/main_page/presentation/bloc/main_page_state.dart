@@ -4,17 +4,17 @@ class MainPageState extends Equatable {
   const MainPageState({
     this.isLoading = true,
     this.tasksBox,
-    this.completedStatus = Completed.all,
+    this.completedStatus = CompletedStatus.all,
   });
 
   final bool isLoading;
   final Box<TaskModel>? tasksBox;
-  final Completed completedStatus;
+  final CompletedStatus completedStatus;
 
   MainPageState copyWith({
     bool? isLoading,
     Box<TaskModel>? tasksBox,
-    Completed? completedStatus,
+    CompletedStatus? completedStatus,
   }) {
     return MainPageState(
       isLoading: isLoading ?? this.isLoading,
